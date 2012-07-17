@@ -1,0 +1,21 @@
+The format for the main character g is:
+
+g<state><frame><direction>.png
+
+
+<state>:
+
+c: Crouching
+cr: Crawling/second frame of dying
+da: Dying 1
+db: Dying 2
+dc: Dead
+fa: Falling (fast)
+fb: Falling (slow)
+ja: Jumping (fast)
+jb: Jumping (slow)
+k: Kneeling/first frame of dying
+r: Running
+rs: Sliding while running
+rt: Turning while running
+s: Still
