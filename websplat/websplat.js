@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Gregor Richards
+ * Copyright (c) 2010, 2012 Gregor Richards
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -957,8 +957,8 @@ var WebSplat = new (function() {
         // we're still alive!
         this.dead = false;
         this.deathSpeed = 1;
-        this.hp = 1;
-        this.maxHP = 1;
+        this.hp = 6;
+        this.maxHP = 6;
         this.invincible = false;
         this.invTimer = null;
     
@@ -1125,11 +1125,11 @@ var WebSplat = new (function() {
     }
 
     Player.prototype.doDamage = function(to, pts) {
-        if (Math.random()*3 < 1) {
+        /*if (Math.random()*3 < 1) {
             this.hp++;
             if (this.hp > this.maxHP) this.hp = this.maxHP;
         }
-        this.onChangeHP();
+        this.onChangeHP();*/
     }
 
     Player.prototype.onChangeHP = function() {}
