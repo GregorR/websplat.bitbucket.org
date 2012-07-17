@@ -101,13 +101,6 @@ var WebSplat = new (function() {
                 height: 62,
                 bb: [30, 46, 24, 36]
             },
-            f: { // flying
-                frames: 4,
-                frameRate: 3,
-                width: 68,
-                height: 62,
-                bb: [30, 46, 24, 36]
-            },
             z: { // zapped
                 frames: 2,
                 frameRate: 3,
@@ -1166,6 +1159,11 @@ var WebSplat = new (function() {
         }
 
         return false;
+    }
+
+    Player.prototype.getHP = function(pts) {
+        this.hp += pts;
+        if (this.hp > this.maxHP) this.hp = this.maxHP;
     }
 
     Player.prototype.doDamage = function(to, pts) {}
