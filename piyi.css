@@ -1,0 +1,84 @@
+body {
+    background: #550033;
+    color: #222222;
+    margin: 0px;
+}
+
+.header {
+    height: 392px;
+    background: #000000;
+}
+
+.teaser {
+    height: 30px;
+    background: #000000 url(imgs/piyi.png) center bottom repeat;
+}
+
+.banner {
+    height: 360px;
+    background: #ffddff url(imgs/banner.jpg) center top no-repeat;
+    width: 100%;
+}
+
+.content {
+    max-width: 40em;
+    min-height: 40em;
+    background: #ddddff;
+    margin: auto;
+    padding: 2em;
+    border: 2px solid black;
+    border-top: 0px;
+    font-size: 20px;
+}
+
+.bigl {
+    font-size: 2em;
+}
+
+h1 {
+    font-size: 2em;
+    text-align: center;
+}
+
+.bigr {
+    font-size: 2em;
+    text-align: right;
+}
+
+.small {
+    font-size: 0.75em;
+}
+
+.buttonbox {
+    padding: 1.25em;
+    text-align: center;
+}
+
+.button {
+    font-size: 2em;
+    background: #aaaaff;
+    padding: 0.5em;
+    text-decoration: none;
+    color: #000000;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.sep {
+    height: 0.25em;
+    background: #bbbbff;
+    width: 85%;
+    margin: 1em auto 1em auto;
+}
+
+.flimflam {
+    background: url(imgs/flimflam.jpg) center top no-repeat;
+    border: 1px solid #bbbbff;
+    padding: 1em;
+}
+
+.so {
+    text-decoration: line-through;
+}
