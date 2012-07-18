@@ -82,3 +82,8 @@ h1 {
 .so {
     text-decoration: line-through;
 }
+
+.addthis_toolbox {
+    width: 455px;
+    margin: 0 auto;
+}
