@@ -51,6 +51,9 @@ h1 {
 
 .buttonbox {
     padding: 1.25em;
+}
+
+.centered {
     text-align: center;
 }
 
