@@ -20,6 +20,10 @@ body {
     width: 100%;
 }
 
+.hidden {
+    display: none;
+}
+
 .content {
     max-width: 40em;
     min-height: 40em;
