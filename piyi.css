@@ -1,7 +1,38 @@
-body {
-    background: #550033;
+html, body {
+    background:url(imgs/stripes.png);
     color: #222222;
-    margin: 0px;
+    margin:0;
+    padding:0;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+hr {
+    height:5px;
+    background:#bbbbff;
+    border:none;
+    margin:35px 0 35px 0;
+}
+
+p {
+    font-size:15px;
+    line-height:1.75em;    
+    text-align:center;
+}
+
+a { color:#2A00FF; text-decoration:none; }
+a:hover { color:#2A7FFF; text-decoration:underline; }
+
+.bg {
+    background:#eeeeff;
+}
+
+.text-center {
+    text-align:center;    
+}
+
+.teaser {
+    height: 30px;
+    background: #000 url(imgs/piyi.png) center bottom repeat;
 }
 
 .header {
@@ -9,85 +40,101 @@ body {
     background: #000000;
 }
 
-.teaser {
-    height: 30px;
-    background: #000000 url(imgs/piyi.png) center bottom repeat;
-}
-
 .banner {
     height: 360px;
     background: #ffddff url(imgs/banner.jpg) center top no-repeat;
     width: 100%;
-}
-
-.hidden {
-    display: none;
+    box-shadow:0px 0px 25px #000;
 }
 
 .content {
-    max-width: 40em;
-    min-height: 40em;
-    background: #ddddff;
-    margin: auto;
-    padding: 2em;
-    border: 2px solid black;
-    border-top: 0px;
-    font-size: 20px;
-}
-
-.bigl {
-    font-size: 2em;
-}
-
-h1 {
-    font-size: 2em;
-    text-align: center;
-}
-
-.bigr {
-    font-size: 2em;
-    text-align: right;
+    width:40em;
+    margin:auto;
+    background:url(imgs/rainbow.png) center;
 }
 
 .small {
-    font-size: 0.75em;
+    font-size:12px;
+}
+
+.container {
+    height:auto;
+    padding:2em;
+    background: #ddddff;
+    font-size: 16px;
+    margin:50px 0 50px 0;    
+    border-radius:15px;
+    -o-border-radius:15px;
+    -ms-border-radius:15px;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border:2px groove #bbbbff;
+    box-shadow:0px 0px 15px #8888ff;
+}
+
+.bigl {
+    font-family: 'Neuton', serif;
+    font-size: 1.7em;
+    font-weight:bold;
+    margin-top:-15px;
+}
+
+.bigr {
+    font-family: 'Neuton', serif;
+    font-size: 2.5em;
+    font-weight:bolder;
+    text-align:right;
+    margin-bottom:-10px;
+}
+
+h1 {
+    font-family: 'Neuton', serif;
+    font-size: 2em;
+    text-align: center;
+    margin:-10px 0 15px 0;
 }
 
 .buttonbox {
+    font-family: 'Neuton', serif;
+    font-weight:bolder;
     padding: 1.25em;
-}
-
-.centered {
     text-align: center;
 }
 
 .button {
     font-size: 2em;
-    background: #aaaaff;
+    background:url(imgs/flimflam.jpg);
     padding: 0.5em;
     text-decoration: none;
-    color: #000000;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -khtml-border-radius: 20px;
-    border-radius: 20px;
+    color:#000;
+    border-radius:15px;
+    -o-border-radius:15px;
+    -ms-border-radius:15px;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border:2px outset #bbbbff;
 }
 
-.sep {
-    height: 0.25em;
-    background: #bbbbff;
-    width: 85%;
-    margin: 1em auto 1em auto;
+.button:hover {
+    background: #9999ff;
+    color:#000;
+    border:2px inset #bbbbff;
 }
 
-.flimflam {
-    background: url(imgs/flimflam.jpg) center top no-repeat;
-    border: 1px solid #bbbbff;
-    padding: 1em;
+.bordered {
+    border: 1px dashed #8888ff;
+    padding:1.7em;    
 }
 
 .so {
     text-decoration: line-through;
+}
+
+.block {
+    font-size:12px;
+    margin:auto auto;
+    line-height:1.75em;
+    max-width:30em;    
 }
 
 .addthis_toolbox {
