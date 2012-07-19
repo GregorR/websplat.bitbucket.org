@@ -1,0 +1,26 @@
+.piyib {
+    font-family: 'Neuton', serif;
+    font-weight:bolder;
+    padding: 1.25em;
+    display: inline-block;
+}
+
+.piyib a {
+    font-size: 2em;
+    background:url(http://websplat.bitbucket.org/imgs/flimflam.jpg);
+    padding: 0.5em;
+    text-decoration: none;
+    color:#000;
+    border-radius:15px;
+    -o-border-radius:15px;
+    -ms-border-radius:15px;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border:2px outset #bbbbff;
+}
+
+.piyib a:hover {
+    background: #9999ff;
+    color:#000;
+    border:2px inset #bbbbff;
+}
