@@ -24,7 +24,7 @@ var WebSplatPony = "aj";
     var imageBase = "http://websplat.bitbucket.org/imgs/";
     var head;
 
-    // debugging output
+    // a "window" for output
     var wpMsgOut = window.wpMsgOut = document.createElement("div");
     wpMsgOut.style.position = "fixed";
     wpMsgOut.style.left = "0px";
@@ -94,6 +94,17 @@ var WebSplatPony = "aj";
     selector.style.paddingBottom = "1em";
     displayMessage(selector);
 
+    // a link back to us
+    var link = document.createElement("a");
+    link.href = "http://websplat.bitbucket.org/";
+    link.innerHTML = "Brought to you by WebSplat";
+    link.style.fontSize = "0.85em";
+    link.style.color = "#02a";
+    link.style.position = "fixed";
+    link.style.top = "0.5em";
+    link.style.right = "0.5em";
+    selector.appendChild(link);
+
     // a header to say what's going on
     var hdr = document.createElement("div");
     var himg = document.createElement("img");
@@ -120,7 +131,9 @@ var WebSplatPony = "aj";
             head = document.getElementsByTagName("head")[0];
             selector.style.display = "none";
 
-            displayMessage("Loading...");
+            displayMessage("<img src=\"" + imageBase + pony + ".ranimr.gif\" />" +
+                           "Loading..." +
+                           "<img src=\"" + imageBase + pony + ".raniml.gif\" />");
             scriptChain([
                 "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
                 "websplat.js",
