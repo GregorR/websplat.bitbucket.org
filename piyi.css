@@ -48,7 +48,7 @@ a:hover { color:#2A7FFF; text-decoration:underline; }
 }
 
 .content {
-    width:40em;
+    max-width:40em;
     margin:auto;
     background:url(imgs/rainbow.png) center;
 }
@@ -138,7 +138,7 @@ h1 {
 }
 
 .addthis_toolbox {
-    width: 475px;
+    max-width: 475px;
     margin: 0 auto;
 }
 
