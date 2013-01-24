@@ -27,9 +27,16 @@
         r: {
             frames: 16,
             frameRate: 3,
-            width: 62,
-            height: 62,
-            bb: [26, 45, 35, 39]
+            width: 53,
+            height: 53,
+            bb: [23, 39, 31, 35]
+        },
+        c: {
+            frames: 32,
+            frameRate: 3,
+            width: 82,
+            height: 58,
+            bb: [36, 68, 37, 40], // make this fit with r
         }
     }
 
@@ -42,8 +49,16 @@
         this.xacc = 0;
         this.updateImage();
     }
+    WebSplat.Pony = DiamondDog;
     DiamondDog.prototype = new WebSplat.SpriteChild();
     DiamondDog.prototype.isBaddy = true;
+
+    DiamondDog.prototype.updateImagePrime = function() {
+        if (this.state === "c" && this.frame >= diamondDogImageSets.c.frames) {
+            this.state = "r";
+            this.frame = 0;
+        }
+    }
 
     // don't collide with goodies
     DiamondDog.prototype.collision = function(els, xs, ys) {
