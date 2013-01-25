@@ -64,7 +64,7 @@
         if (src.match(/\/\//)) {
             script.src = src;
         } else {
-            script.src = "http://websplat.bitbucket.org/2/websplat/" + src;
+            script.src = "http://localhost:8080/" + src;
         }
         head.appendChild(script);
 
@@ -95,8 +95,7 @@
         scriptChain([
             "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
             "websplat.js",
-            "websplat-baddy.js",
-            "websplat-diamonddog.js",
+            "websplat-pony.js",
             "websplat-goody.js",
             "websplat-bazooka.js",
             "go.js"
