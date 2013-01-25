@@ -16,7 +16,7 @@ var WebSplat;
         hopAbove: 5,
         zapTime: 10,
         invTime: 1000,
-        imageBase: "http://localhost:8080/imgs/",
+        imageBase: "http://websplat.bitbucket.org/imgs/",
         maxX: 0,
         maxY: 0
     };
@@ -268,18 +268,16 @@ var WebSplat;
             elr = Math.ceil(elr >> WebSplat.conf.gridDensity);
             elb = Math.ceil(elb >> WebSplat.conf.gridDensity);
             for(var y = elt; y <= elb; y++) {
-                var sy = String(y);
-                if(!(sy in elementPositions)) {
-                    elementPositions[sy] = {
+                if(!(y in elementPositions)) {
+                    elementPositions[y] = {
                     };
                 }
-                var epy = elementPositions[sy];
+                var epy = elementPositions[y];
                 for(var x = ell; x <= elr; x++) {
-                    var sx = String(x);
-                    if(!(sx in epy)) {
-                        epy[sx] = [];
+                    if(!(x in epy)) {
+                        epy[x] = [];
                     }
-                    epy[sx].push(el);
+                    epy[x].push(el);
                 }
             }
         }
@@ -313,24 +311,22 @@ var WebSplat;
             elr = Math.ceil(elr >> WebSplat.conf.gridDensity);
             elb = Math.ceil(elb >> WebSplat.conf.gridDensity);
             for(var y = elt; y <= elb; y++) {
-                var sy = String(y);
-                if(!(sy in elementPositions)) {
+                if(!(y in elementPositions)) {
                     continue;
                 }
-                var epy = elementPositions[sy];
+                var epy = elementPositions[y];
                 for(var x = ell; x <= elr; x++) {
-                    var sx = String(x);
-                    if(!(sx in epy)) {
+                    if(!(x in epy)) {
                         continue;
                     }
-                    var els = epy[sx];
+                    var els = epy[x];
                     var outels = [];
                     for(var i = 0; i < els.length; i++) {
                         if(els[i] !== el) {
                             outels.push(els[i]);
                         }
                     }
-                    epy[sx] = outels;
+                    epy[x] = outels;
                 }
             }
         }
@@ -506,30 +502,6 @@ while(true) {
             this.state = state;
             this.hasGravity = hasGravity;
             this.isPlatform = isPlatform;
-            this.el = undefined;
-            this.x = 0;
-            this.y = 0;
-            this.w = 0;
-            this.h = 0;
-            this.dir = "";
-            this.frame = 0;
-            this.xioff = 0;
-            this.yioff = 0;
-            this.xvel = 0;
-            this.yvel = 0;
-            this.xacc = undefined;
-            this.xaccmax = undefined;
-            this.slowxacc = 0;
-            this.yacc = undefined;
-            this.zap = undefined;
-            this.leftOf = null;
-            this.rightOf = null;
-            this.above = null;
-            this.on = null;
-            this.thru = undefined;
-            this.images = undefined;
-            this.useCanvas = false;
-            this.drawn = undefined;
             this.dir = "r";
             this.frame = 0;
             this.x = 0;
@@ -920,11 +892,10 @@ while(true) {
                 }
                 for(var eli = 0; eli < elbox.length; eli++) {
                     var el = elbox[eli];
-                    var elIS = String(el.wpID);
-                    if(elIS in checked) {
+                    if(el.wpID in checked) {
                         continue;
                     }
-                    checked[elIS] = true;
+                    checked[el.wpID] = true;
                     if(typeof (el.wpAllowClip) !== "undefined") {
                         continue;
                     }
@@ -962,7 +933,7 @@ while(true) {
         for(var i = 0; i < inels.length; i++) {
             var inel = inels[i];
             outthru[inel.wpID] = true;
-            if(!(String(inel.wpID) in thru)) {
+            if(!(inel.wpID in thru)) {
                 outels.push(inel);
             }
         }
@@ -988,12 +959,12 @@ while(true) {
             tries = 128;
         }
         for(var i = 0; i < tries; i++) {
-            var ybox = String(getRandomInt(minY >> WebSplat.conf.gridDensity, (WebSplat.conf.maxY >> WebSplat.conf.gridDensity) + 1));
+            var ybox = getRandomInt(minY >> WebSplat.conf.gridDensity, (WebSplat.conf.maxY >> WebSplat.conf.gridDensity) + 1);
             if(!(ybox in elementPositions)) {
                 continue;
             }
             var epy = elementPositions[ybox];
-            var xbox = String(getRandomInt(0, (WebSplat.conf.maxX >> WebSplat.conf.gridDensity) + 1));
+            var xbox = getRandomInt(0, (WebSplat.conf.maxX >> WebSplat.conf.gridDensity) + 1);
             if(!(xbox in epy)) {
                 continue;
             }
