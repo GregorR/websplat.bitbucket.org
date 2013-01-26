@@ -538,12 +538,12 @@ while(true) {
                 this.h = 0;
             }
             this.xvel = 0;
-            this.xacc = false;
-            this.xaccmax = false;
+            this.xacc = null;
+            this.xaccmax = null;
             this.slowxacc = 1;
             this.yvel = 0;
-            this.yacc = false;
-            this.zap = false;
+            this.yacc = null;
+            this.zap = null;
             this.leftOf = null;
             this.rightOf = null;
             this.above = null;
@@ -648,11 +648,11 @@ while(true) {
                 this.dir = "l";
             }
             this.updateImagePrime();
-            if(this.zap !== false) {
+            if(this.zap !== null) {
                 this.state = "z";
                 this.zap--;
                 if(this.zap <= 0) {
-                    this.zap = false;
+                    this.zap = null;
                 }
             }
             var imgSet = this.imageSets[this.state];
@@ -705,7 +705,7 @@ while(true) {
         Sprite.prototype.tick = function () {
             this.updateImage();
             var realxacc = this.xacc;
-            if(this.xacc === false) {
+            if(this.xacc === null) {
                 realxacc = 0;
             }
             var slowxacc = this.slowxacc;
@@ -719,15 +719,15 @@ while(true) {
             var appgravity = this.hasGravity ? ("ownGravity" in this) ? (this).ownGravity : WebSplat.conf.gravity : 0;
             var gravs = (appgravity >= 0) ? 1 : -1;
             var realyacc = appgravity;
-            if(this.yacc !== false) {
+            if(this.yacc !== null) {
                 realyacc += this.yacc;
             }
             var xas = (this.xacc >= 0) ? 1 : -1;
             this.yvel += realyacc;
-            if(this.yacc !== false && this.yvel < WebSplat.conf.flyMax) {
+            if(this.yacc !== null && this.yvel < WebSplat.conf.flyMax) {
                 this.yvel = WebSplat.conf.flyMax;
             }
-            if(this.xacc === false) {
+            if(this.xacc === null) {
                 if(this.xvel > 0) {
                     this.xvel -= slowxacc;
                     if(this.xvel < 0) {
@@ -739,9 +739,9 @@ while(true) {
                         this.xvel = 0;
                     }
                 }
-            } else if(this.xaccmax === false || this.xvel * xas < this.xaccmax * xas) {
+            } else if(this.xaccmax === null || this.xvel * xas < this.xaccmax * xas) {
                 this.xvel += realxacc;
-                if(this.xaccmax !== false && this.xvel * xas >= this.xaccmax * xas) {
+                if(this.xaccmax !== null && this.xvel * xas >= this.xaccmax * xas) {
                     this.xvel = this.xaccmax;
                 }
             }

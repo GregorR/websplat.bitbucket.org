@@ -59,15 +59,15 @@ var WebSplat;
                 case 37:
                 case 65:
                     if(WebSplat.player.xacc < 0) {
-                        WebSplat.player.xacc = false;
-                        WebSplat.player.xaccmax = false;
+                        WebSplat.player.xacc = null;
+                        WebSplat.player.xaccmax = null;
                     }
                     break;
                 case 39:
                 case 68:
                     if(WebSplat.player.xacc > 0) {
-                        WebSplat.player.xacc = false;
-                        WebSplat.player.xaccmax = false;
+                        WebSplat.player.xacc = null;
+                        WebSplat.player.xaccmax = null;
                     }
                     break;
                 case 38:
