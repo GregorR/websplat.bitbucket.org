@@ -4,6 +4,7 @@ var WebSplat;
     var bazPower = 50;
     var bazPowerupTime = 2000;
     var bazSpeed = 30;
+    var bazMaxAge = 34;
     var gd = WebSplat.conf.gridDensity;
     var bazPowerMult = bazPower / bazRad;
     var rocketLauncherImageSets = {
@@ -25,33 +26,38 @@ var WebSplat;
         this.firedBy = firedBy;
         WebSplat.Sprite.call(this, "pp2.", rocketLauncherImageSets, "r", "r", true, false);
         this.slowxacc = 0;
+        this.lifespan = bazMaxAge;
     }
     Rocket.prototype = new WebSplat.SpriteChild();
     Rocket.prototype.tick = function () {
         this.thru[this.firedBy.el.wpID] = true;
         WebSplat.Sprite.prototype.tick.call(this);
+        this.lifespan--;
+        if(this.lifespan <= 0) {
+            this.explode();
+        }
     };
     Rocket.prototype.collision = function (els, xs, ys) {
-        var bazX = this.x;
-        var bazY = this.y;
         if(els === null) {
             return els;
         }
+        this.explode();
+        return els;
+    };
+    Rocket.prototype.explode = function () {
         if(this.expended) {
-            return els;
+            return;
         }
         this.expended = true;
-        for(var i = 0; i < els.length; i++) {
-            if(els[i].wpSprite === WebSplat.player) {
-                console.log("DAMMIT");
-            }
-        }
         WebSplat.deplatformSprite(this);
         WebSplat.remSprite(this);
         this.el.parentNode.removeChild(this.el);
         WebSplat.curPony = (WebSplat.curPony + 1) % WebSplat.ponies.length;
         WebSplat.player = WebSplat.ponies[WebSplat.curPony];
+        WebSplat.assertPlayerViewport();
         midFire = false;
+        var bazX = this.x;
+        var bazY = this.y;
         var minX = bazX - bazRad;
         var maxX = bazX + bazRad;
         var minY = bazY - bazRad;
@@ -85,7 +91,6 @@ var WebSplat;
                 }
             }
         }
-        return els;
     };
     var mdStart = null;
     var firing = null;
@@ -105,15 +110,16 @@ var WebSplat;
             }
         }
     });
-    $(window).mousedown(function (ev) {
+    $(document.body).mousedown(function (ev) {
         if(firing || midFire) {
             return true;
         }
+        console.log((ev.target).constructor.name);
         mdStart = new Date().getTime();
         ev.preventDefault();
         ev.stopPropagation();
     });
-    $(window).mouseup(function (ev) {
+    $(document.body).mouseup(function (ev) {
         if(WebSplat.player === null) {
             return true;
         }

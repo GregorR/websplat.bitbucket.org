@@ -455,7 +455,6 @@ while(true) {
                 if(WebSplat.player) {
                     WebSplat.playerIndicator.style.left = (WebSplat.player.x - WebSplat.player.xioff) + "px";
                     WebSplat.playerIndicator.style.top = (WebSplat.player.y - WebSplat.player.yioff - 10) + "px";
-                    assertPlayerViewport();
                 }
             }
             var cur = new Date().getTime();
@@ -704,9 +703,6 @@ while(true) {
             }
         };
         Sprite.prototype.tick = function () {
-            if(!this.onScreen()) {
-                return;
-            }
             this.updateImage();
             var realxacc = this.xacc;
             if(this.xacc === false) {
@@ -1033,7 +1029,6 @@ while(true) {
         }
     }
     WebSplat.spritesOnPlatform = spritesOnPlatform;
-    var viewportAsserted = false;
     function assertViewport(left, right, top, bottom) {
         var mustScroll = false;
         var vx = $(document).scrollLeft();
@@ -1069,20 +1064,13 @@ while(true) {
             vy = bottom - vh + 200;
         }
         if(mustScroll) {
-            viewportAsserted = false;
             window.scroll(Math.floor(vx), Math.floor(vy));
-            viewportAsserted = true;
         }
     }
     function assertPlayerViewport() {
         assertViewport(WebSplat.player.x, WebSplat.player.x + WebSplat.player.w, WebSplat.player.y, WebSplat.player.y + WebSplat.player.h);
     }
     WebSplat.assertPlayerViewport = assertPlayerViewport;
-    $(window).scroll(function () {
-        if(viewportAsserted && WebSplat.player !== null) {
-            assertPlayerViewport();
-        }
-    });
     function go() {
         callHandlers("preload");
         document.body.style.position = "static";
