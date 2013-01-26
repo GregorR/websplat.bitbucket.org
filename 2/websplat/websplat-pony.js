@@ -84,7 +84,6 @@ var WebSplat;
     })(WebSplat.Sprite);
     WebSplat.Pony = Pony;    
     WebSplat.addHandler("postload", function () {
-        var last = null;
         WebSplat.spritesOnPlatform(ponyImageSets.r.width, ponyImageSets.r.height, 480, 2, function () {
             var p = new Pony();
             WebSplat.ponies.push(p);

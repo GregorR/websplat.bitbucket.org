@@ -455,6 +455,9 @@ while(true) {
                 if(WebSplat.player) {
                     WebSplat.playerIndicator.style.left = (WebSplat.player.x - WebSplat.player.xioff) + "px";
                     WebSplat.playerIndicator.style.top = (WebSplat.player.y - WebSplat.player.yioff - 10) + "px";
+                    if(WebSplat.player.xvel || WebSplat.player.yvel) {
+                        assertPlayerViewport();
+                    }
                 }
             }
             var cur = new Date().getTime();
