@@ -82,6 +82,16 @@ var WebSplat;
                 }
                 WebSplat.conf.maxX = maxX;
                 WebSplat.conf.maxY = maxY;
+                var bottomEl = document.createElement("div");
+                bottomEl.style.position = "absolute";
+                bottomEl.style.left = "0px";
+                bottomEl.style.width = maxX + "px";
+                bottomEl.style.top = maxY + "px";
+                bottomEl.style.height = "1px";
+                bottomEl.style.visibility = "hidden";
+                document.body.appendChild(bottomEl);
+                bottomEl.wpThruable = true;
+                addElementPosition(bottomEl);
                 then();
             });
         });
@@ -237,7 +247,9 @@ var WebSplat;
         then();
     }
     function addElementPosition(el) {
-        el.wpID = curWPID++;
+        if(!("wpID" in el)) {
+            el.wpID = curWPID++;
+        }
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
         var rects = el.getClientRects();
@@ -503,30 +515,6 @@ while(true) {
             this.state = state;
             this.hasGravity = hasGravity;
             this.isPlatform = isPlatform;
-            this.el = void 0;
-            this.x = void 0;
-            this.y = void 0;
-            this.w = void 0;
-            this.h = void 0;
-            this.dir = void 0;
-            this.frame = void 0;
-            this.xioff = void 0;
-            this.yioff = void 0;
-            this.xvel = void 0;
-            this.yvel = void 0;
-            this.xacc = void 0;
-            this.xaccmax = void 0;
-            this.slowxacc = void 0;
-            this.yacc = void 0;
-            this.zap = void 0;
-            this.leftOf = void 0;
-            this.rightOf = void 0;
-            this.above = void 0;
-            this.on = void 0;
-            this.thru = void 0;
-            this.images = void 0;
-            this.useCanvas = void 0;
-            this.drawn = void 0;
             this.dir = "r";
             this.frame = 0;
             this.x = 0;

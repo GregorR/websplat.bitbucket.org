@@ -27,7 +27,7 @@ var WebSplat;
         WebSplat.Sprite.call(this, "pp2.", rocketLauncherImageSets, "r", "r", true, false);
         this.slowxacc = 0;
         this.lifespan = bazMaxAge;
-        this.ownGravity = 0.25;
+        this.ownGravity = 0.5;
     }
     Rocket.prototype = new WebSplat.SpriteChild();
     Rocket.prototype.tick = function () {

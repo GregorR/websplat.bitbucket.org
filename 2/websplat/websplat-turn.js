@@ -32,6 +32,21 @@ var WebSplat;
                             WebSplat.player.yvel = -WebSplat.conf.jumpSpeed;
                         }
                         break;
+                    case 40:
+                        if(WebSplat.player.on !== null) {
+                            var thru = 0;
+                            for(var i = 0; i < WebSplat.player.on.length; i++) {
+                                var el = WebSplat.player.on[i];
+                                if(el.wpThruable) {
+                                    WebSplat.player.thru[el.wpID] = true;
+                                    thru++;
+                                }
+                            }
+                            if(thru === WebSplat.player.on.length) {
+                                WebSplat.player.on = null;
+                            }
+                        }
+                        break;
                     case 69:
                 }
                 return false;
