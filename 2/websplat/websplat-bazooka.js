@@ -85,6 +85,7 @@ var WebSplat;
                             sprite.xvel = Math.cos(angle) * (bazRad - dist) * bazPowerMult * ((dx > 0) ? 1 : -1);
                             sprite.forceyvel = Math.sin(angle) * (bazRad - dist) * bazPowerMult * ((dy > 0) ? 1 : -1);
                         }
+                    } else if("wpUndestroyable" in el) {
                     } else if(WebSplat.elInDistance(el, bazRad, bazX, bazY)) {
                         WebSplat.remElementPosition(el);
                         el.style.visibility = "hidden";
