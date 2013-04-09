@@ -33,7 +33,6 @@ module WebSplat {
     playerIndicator.style.border = "1px solid red";
     playerIndicator.style.padding = "2px 2px 2px 2px";
     playerIndicator.innerHTML = "Player";
-    document.body.appendChild(playerIndicator);
 
     export var player: Sprite = null;
 
@@ -62,7 +61,7 @@ module WebSplat {
         // time to be invincible for
         invTime: 1000,
 
-        imageBase: "http://websplat.bitbucket.org/imgs/",
+        imageBase: "http://localhost:8080/imgs/",
 
         // auto-filled
         maxX: 0,
@@ -1281,6 +1280,7 @@ module WebSplat {
         document.body.style.position = "static";
     
         initElementPositions(function() {
+            document.body.appendChild(playerIndicator);
             /*
             // prevent resizing (it's cheating!)
             var origW = $(window).width();
