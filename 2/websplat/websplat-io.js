@@ -248,22 +248,22 @@ var WebSplat;
             return IOHandler;
         })();
         IO.IOHandler = IOHandler;        
-        IO.ioHandler = null;
+        var ioHandler = null;
         function setIOHandler(to) {
-            if(IO.ioHandler !== null) {
+            if(ioHandler !== null) {
                 unsetIOHandler();
             }
             if(to !== null) {
-                IO.ioHandler = to;
+                ioHandler = to;
                 if(!to.activate()) {
-                    IO.ioHandler = null;
+                    ioHandler = null;
                 }
             }
         }
         IO.setIOHandler = setIOHandler;
         function unsetIOHandler() {
-            IO.ioHandler.deactivate();
-            IO.ioHandler = null;
+            ioHandler.deactivate();
+            ioHandler = null;
         }
         IO.unsetIOHandler = unsetIOHandler;
         var keysDown = {
@@ -305,8 +305,8 @@ var WebSplat;
                 if(markKeyDown(key)) {
                     return false;
                 }
-                if(IO.ioHandler) {
-                    if(IO.ioHandler.onkeydown(key)) {
+                if(ioHandler) {
+                    if(ioHandler.onkeydown(key)) {
                         return true;
                     } else {
                         ev.preventDefault();
@@ -321,8 +321,8 @@ var WebSplat;
             var keyup = function (ev) {
                 var key = translateKey(ev.which);
                 markKeyUp(key);
-                if(IO.ioHandler) {
-                    if(IO.ioHandler.onkeyup(key)) {
+                if(ioHandler) {
+                    if(ioHandler.onkeyup(key)) {
                         return true;
                     } else {
                         ev.preventDefault();
@@ -335,8 +335,8 @@ var WebSplat;
             $(document.body).keyup(keyup);
             $(window).keyup(keyup);
             $(document.body).mousedown(function (ev) {
-                if(IO.ioHandler) {
-                    if(IO.ioHandler.onmousedown(ev)) {
+                if(ioHandler) {
+                    if(ioHandler.onmousedown(ev)) {
                         return true;
                     } else {
                         ev.preventDefault();
@@ -347,8 +347,8 @@ var WebSplat;
                 return true;
             });
             $(document.body).mouseup(function (ev) {
-                if(IO.ioHandler) {
-                    if(IO.ioHandler.onmouseup(ev)) {
+                if(ioHandler) {
+                    if(ioHandler.onmouseup(ev)) {
                         return true;
                     } else {
                         ev.preventDefault();
@@ -359,8 +359,8 @@ var WebSplat;
                 return true;
             });
             $(document.body).click(function (ev) {
-                if(IO.ioHandler) {
-                    if(IO.ioHandler.onclick(ev)) {
+                if(ioHandler) {
+                    if(ioHandler.onclick(ev)) {
                         return true;
                     } else {
                         ev.preventDefault();

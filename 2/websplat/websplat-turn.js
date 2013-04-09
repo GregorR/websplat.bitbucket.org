@@ -295,6 +295,6 @@ var WebSplat;
             };
             return MovePhaseIOHandler;
         })(WebSplat.IO.IOHandler);        
-        WebSplat.IO.ioHandler = new MovePhaseIOHandler();
+        WebSplat.IO.setIOHandler(new MovePhaseIOHandler());
     })(Turns || (Turns = {}));
 })(WebSplat || (WebSplat = {}));
