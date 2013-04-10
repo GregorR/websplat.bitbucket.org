@@ -17,13 +17,29 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
             }
         }
 
-        function dynamicTypeError(expected, foundVal) {
+        Object.defineProperty(Object, "$$jali$$maybeUnwrap", {
+            value: function(obj) {
+                if (typeof obj === "object" && obj !== null) return obj.$$jali$$unwrap();
+                return obj;
+            }
+        });
+
+        Object.defineProperty(Object.prototype, "$$jali$$unwrap", {
+            writable: true, // overridable
+            value: function() { return this; }
+        });
+
+        function dynamicTypeError(expected, foundVal, stack) {
             var found = classOf(foundVal);
-            throw new Error("Dynamic type check failure. Expected " + expected + ", found " + found);
+            if (typeof stack === undefined) stack = "";
+            throw new Error("Dynamic type check failure. Expected " + expected + ", found " + found + "\n" + stack);
         }
+        Object.defineProperty(Object, "$$jali$$dynamicTypeError", {
+            value: dynamicTypeError
+        });
 
         Object.defineProperty(Function.prototype, "$$jali$$check", {
-            value: function(x) {
+            value: function(x, stack) {
                 if (x === null || x === void 0 || x instanceof this) {
                     return x;
                 } else {
@@ -31,23 +47,23 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
                     expected = this.name;
                     if (expected === void 0)
                         expected = "(unknown)";
-                    dynamicTypeError(expected, x);
+                    dynamicTypeError(expected, x, stack);
                 }
             }
         });
 
         Object.defineProperty(Object, "$$jali$$implements", {
-            value: function(obj, iface) {
+            value: function(obj, iface, tid, stack) {
                 if (typeof obj === "object") {
                     if (obj !== null && obj.$$jali$$implementsList && obj.$$jali$$implementsList["+" + iface]) {
                         return obj;
                     } else {
-                        return obj; // FIXME: obviously wrong, need to wrap for checking
+                        return Object["$$jali$$object$" + tid].$$jali$$check(obj, stack);
                     }
                 } else if (obj === void 0) {
                     return obj; // undefined is just another null
                 } else {
-                    dynamicTypeError(iface, obj);
+                    dynamicTypeError(iface, obj, stack);
                 }
             }
         });
@@ -59,22 +75,22 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
         });
 
         Object.defineProperty(Object, "$$jali$$primitive$function", {
-            value: { $$jali$$check: function(x) {
+            value: { $$jali$$check: function(x, stack) {
                 if (typeof x === "function") {
                     return x;
                 } else {
-                    dynamicTypeError("Function", x);
+                    dynamicTypeError("Function", x, stack);
                 }
             }}
         });
 
 
         function primCheck(type) {
-            return function(x) {
+            return function(x, stack) {
                 if (typeof x === type) {
                     return x;
                 } else {
-                    dynamicTypeError(type, x);
+                    dynamicTypeError(type, x, stack);
                 }
             }
         }
@@ -98,7 +114,8 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
         var jaliDirectDesc = {value: jaliDirect};
 
         function jaliDirectWriteVerify(protoSteps, expectedSize) {
-            /*var realSize = Object.getOwnPropertyNames(this).length;
+            /*
+            var realSize = Object.getOwnPropertyNames(this).length;
             if (realSize !== expectedSize) {
                 var msg = "Misconstructed class: Expected size " + expectedSize + ", found " + realSize;
                 if (console && console.trace) {
@@ -111,7 +128,8 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
                         throw err;
                     }
                 }
-            }*/
+            }
+            */
             return this;
         }
 
@@ -224,7 +242,24 @@ var WebSplat;
 (function (WebSplat) {
     (function (IO) {
         var IOHandler = (function () {
-            function IOHandler() { }
+            function IOHandler(prev, next) {
+                this.prev = prev;
+                this.next = next;
+            }
+            IOHandler.prototype.regress = function () {
+                if(this.prev !== null) {
+                    setIOHandler(this.prev);
+                    return true;
+                }
+                return false;
+            };
+            IOHandler.prototype.advance = function () {
+                if(this.next !== null) {
+                    setIOHandler(this.next);
+                    return true;
+                }
+                return false;
+            };
             IOHandler.prototype.activate = function () {
                 return true;
             };
@@ -245,6 +280,8 @@ var WebSplat;
             IOHandler.prototype.onclick = function (ev) {
                 return true;
             };
+            //adding mutators:
+
             return IOHandler;
         })();
         IO.IOHandler = IOHandler;        

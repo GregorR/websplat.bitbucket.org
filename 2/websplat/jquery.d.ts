@@ -194,13 +194,13 @@ interface JQueryStatic {
     *****/
     holdReady(hold: bool): any;
 
-    (selector: string, context?: any): $$jali$$guaranteed JQuery;
-    (element: Element): $$jali$$guaranteed JQuery;
-    (object: { }): $$jali$$guaranteed JQuery;
-    (elementArray: Element[]): $$jali$$guaranteed JQuery;
-    (object: JQuery): $$jali$$guaranteed JQuery;
-    (func: Function): $$jali$$guaranteed JQuery;
-    (): $$jali$$guaranteed JQuery;
+    (selector: string, context?: any): JQuery;
+    (element: Element): JQuery;
+    (object: { }): JQuery;
+    (elementArray: Element[]): JQuery;
+    (object: JQuery): JQuery;
+    (func: Function): JQuery;
+    (): JQuery;
 
     noConflict(removeAll?: bool): Object;
 

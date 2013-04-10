@@ -245,88 +245,190 @@ var __extends = this.__extends || function (d, b) {
 };
 var WebSplat;
 (function (WebSplat) {
-    var Turns;
-    (function (Turns) {
-        var MovePhaseIOHandler = (function (_super) {
-            __extends(MovePhaseIOHandler, _super);
-            function MovePhaseIOHandler() {
-                        _super.call(this, null, null);
+    var Weapon;
+    (function (Weapon) {
+        var Weapon = (function () {
+            function Weapon(name, ioHandler) {
+                this.name = name;
+                this.ioHandler = ioHandler;
             }
-            MovePhaseIOHandler.prototype.onkeydown = function (key) {
-                if(WebSplat.player === null) {
-                    return true;
+            //adding mutators:
+
+            return Weapon;
+        })();
+        Weapon.Weapon = Weapon;        
+        Weapon.weapons = [];
+        var Bazooka;
+        (function (Bazooka) {
+            var bazRad = 100;
+            var bazPower = 50;
+            var bazPowerupTime = 2000;
+            var bazSpeed = 30;
+            var bazMaxAge = 34;
+            var gd = WebSplat.conf.gridDensity;
+            var bazPowerMult = bazPower / bazRad;
+            var rocketLauncherImageSets = {
+                r: {
+                    frames: 1,
+                    frameRate: 3,
+                    width: 50,
+                    height: 50,
+                    bb: [
+                        16, 
+                        16 + 17, 
+                        25, 
+                        25 + 9
+                    ]
                 }
-                switch(key) {
-                    case 37:
-                        WebSplat.player.xacc = -1;
-                        WebSplat.player.xaccmax = WebSplat.conf.moveSpeed * -1;
-                        break;
-                    case 39:
-                        WebSplat.player.xacc = 1;
-                        WebSplat.player.xaccmax = WebSplat.conf.moveSpeed;
-                        break;
-                    case 38:
-                        if(WebSplat.player.on !== null) {
-                            WebSplat.player.on = null;
-                            WebSplat.player.yvel = -WebSplat.conf.jumpSpeed;
+            };
+            function Rocket(firedBy) {
+                this.expended = false;
+                this.firedBy = firedBy;
+                WebSplat.Sprite.call(this, "base.", rocketLauncherImageSets, "r", "r", true, false);
+                this.slowxacc = 0;
+                this.lifespan = bazMaxAge;
+                this.ownGravity = 0.5;
+            }
+            Rocket.prototype = new WebSplat.SpriteChild();
+            Rocket.prototype.tick = function () {
+                this.thru[this.firedBy.el.wpID] = true;
+                WebSplat.Sprite.prototype.tick.call(this);
+                this.lifespan--;
+                if(this.lifespan <= 0) {
+                    this.explode();
+                }
+            };
+            Rocket.prototype.collision = function (els, xs, ys) {
+                if(els === null) {
+                    return els;
+                }
+                this.explode();
+                return els;
+            };
+            Rocket.prototype.explode = function () {
+                if(this.expended) {
+                    return;
+                }
+                this.expended = true;
+                WebSplat.deplatformSprite(this);
+                WebSplat.remSprite(this);
+                this.el.parentNode.removeChild(this.el);
+                WebSplat.curPony = (WebSplat.curPony + 1) % WebSplat.ponies.length;
+                WebSplat.player = WebSplat.ponies[WebSplat.curPony];
+                WebSplat.assertPlayerViewport();
+                this.midFire = false;
+                var bazX = this.x;
+                var bazY = this.y;
+                var minX = bazX - bazRad;
+                var maxX = bazX + bazRad;
+                var minY = bazY - bazRad;
+                var maxY = bazY + bazRad;
+                var minXB = minX >> gd;
+                var maxXB = maxX >> gd;
+                var minYB = minY >> gd;
+                var maxYB = maxY >> gd;
+                for(var y = minYB; y <= maxYB; y++) {
+                    for(var x = minXB; x <= maxXB; x++) {
+                        var els = WebSplat.getElementsGridPosition(x, y);
+                        if(els === null) {
+                            continue;
                         }
-                        break;
-                    case 40:
-                        if(WebSplat.player.on !== null) {
-                            var thru = 0;
-                            for(var i = 0; i < WebSplat.player.on.length; i++) {
-                                var el = WebSplat.player.on[i];
-                                if(el.wpThruable) {
-                                    WebSplat.player.thru[el.wpID] = true;
-                                    thru++;
+                        for(var i = 0; i < els.length; i++) {
+                            var el = els[i];
+                            if("wpSprite" in el) {
+                                var sprite = el.wpSprite;
+                                var dx = sprite.x - bazX;
+                                var dy = sprite.y - bazY;
+                                var dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                                if(dist < bazRad) {
+                                    var angle = Math.atan2(Math.abs(dy), Math.abs(dx));
+                                    sprite.xvel = Math.cos(angle) * (bazRad - dist) * bazPowerMult * ((dx > 0) ? 1 : -1);
+                                    sprite.forceyvel = Math.sin(angle) * (bazRad - dist) * bazPowerMult * ((dy > 0) ? 1 : -1);
                                 }
+                            } else if("wpUndestroyable" in el) {
+                            } else if(WebSplat.elInDistance(el, bazRad, bazX, bazY)) {
+                                WebSplat.remElementPosition(el);
+                                el.style.visibility = "hidden";
                             }
-                            if(thru === WebSplat.player.on.length) {
-                                WebSplat.player.on = null;
-                            }
                         }
-                        break;
-                    case 69:
+                    }
                 }
-                return false;
             };
-            MovePhaseIOHandler.prototype.onkeyup = function (key) {
-                if(WebSplat.player === null) {
-                    return true;
+            var BazookaFireIOHandler = (function (_super) {
+                __extends(BazookaFireIOHandler, _super);
+                function BazookaFireIOHandler(prev, next) {
+                                _super.call(this, prev, next);
+                    this.$$jali$$value$mdStart = null;
+                    this.$$jali$$value$firing = null;
+                    this.$$jali$$value$midFire = false;
                 }
-                switch(key) {
-                    case 37:
-                        if(WebSplat.player.xacc < 0) {
-                            WebSplat.player.xacc = null;
-                            WebSplat.player.xaccmax = null;
+                BazookaFireIOHandler.prototype.onmousedown = function (ev) {
+                    if(this.firing || this.midFire) {
+                        return true;
+                    }
+                    this.mdStart = new Date().getTime();
+                    return false;
+                };
+                BazookaFireIOHandler.prototype.onmouseup = function (ev) {
+                    if(WebSplat.player === null) {
+                        return true;
+                    }
+                    if(this.mdStart === null) {
+                        return true;
+                    }
+                    var bazTime = new Date().getTime() - this.mdStart;
+                    this.mdStart = null;
+                    bazTime /= bazPowerupTime;
+                    if(bazTime > 1.0) {
+                        bazTime = 1.0;
+                    }
+                    bazTime = bazTime * 0.75 + 0.25;
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    var angle = Math.atan2(ev.pageY - WebSplat.player.y, ev.pageX - WebSplat.player.x);
+                    var xvel = Math.cos(angle) * bazSpeed * bazTime;
+                    var yvel = Math.sin(angle) * bazSpeed * bazTime;
+                    if(WebSplat.player instanceof WebSplat.Pony) {
+                        WebSplat.player.state = "c";
+                        WebSplat.player.frame = 0;
+                        if(xvel < 0) {
+                            WebSplat.player.dir = "l";
+                        } else {
+                            WebSplat.player.dir = "r";
                         }
-                        break;
-                    case 39:
-                        if(WebSplat.player.xacc > 0) {
-                            WebSplat.player.xacc = null;
-                            WebSplat.player.xaccmax = null;
-                        }
-                        break;
-                }
-                return false;
-            };
-            //adding mutators:
+                    }
+                    var rocket = new Rocket(WebSplat.player);
+                    rocket.setXY(WebSplat.player.x, WebSplat.player.y);
+                    rocket.startingPosition();
+                    rocket.xvel = xvel;
+                    rocket.yvel = yvel;
+                    WebSplat.addSprite(rocket);
+                    this.midFire = true;
+                    return false;
+                };
+                BazookaFireIOHandler.prototype.onclick = function (ev) {
+                    return false;
+                };
+                //adding mutators:
 
-            return MovePhaseIOHandler;
-        })(WebSplat.IO.IOHandler);        
-        Turns.theMovePhaseIOHandler = new MovePhaseIOHandler();
-        WebSplat.IO.setIOHandler(Turns.theMovePhaseIOHandler);
-        var SelectPhaseIOHandler = (function (_super) {
-            __extends(SelectPhaseIOHandler, _super);
-            function SelectPhaseIOHandler() {
-                        _super.call(this, null, null);
-            }
-            //adding mutators:
-
-            return SelectPhaseIOHandler;
-        })(WebSplat.IO.IOHandler);        
-        Turns.theSelectPhaseIOHandler = new SelectPhaseIOHandler();
-        Turns.theMovePhaseIOHandler.next = Turns.theSelectPhaseIOHandler;
-        Turns.theSelectPhaseIOHandler.prev = Turns.theMovePhaseIOHandler;
-    })(Turns || (Turns = {}));
+                Object.defineProperty(BazookaFireIOHandler.prototype, "mdStart", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$mdStart; },
+                    set: function(v) { this.$$jali$$value$mdStart = v; }
+                });
+                Object.defineProperty(BazookaFireIOHandler.prototype, "firing", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$firing; },
+                    set: function(v) { this.$$jali$$value$firing = v; }
+                });
+                Object.defineProperty(BazookaFireIOHandler.prototype, "midFire", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$midFire; },
+                    set: function(v) { this.$$jali$$value$midFire = v; }
+                });
+                return BazookaFireIOHandler;
+            })(WebSplat.IO.IOHandler);            
+            Weapon.weapons.push(new Weapon("Bazooka", BazookaFireIOHandler));
+        })(Bazooka || (Bazooka = {}));
+    })(Weapon || (Weapon = {}));
 })(WebSplat || (WebSplat = {}));
