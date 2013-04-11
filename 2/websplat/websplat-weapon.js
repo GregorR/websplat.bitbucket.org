@@ -245,18 +245,17 @@ var __extends = this.__extends || function (d, b) {
 };
 var WebSplat;
 (function (WebSplat) {
-    var Weapon;
     (function (Weapon) {
-        var Weapon = (function () {
-            function Weapon(name, ioHandler) {
+        var WeaponW = (function () {
+            function WeaponW(name, ioHandler) {
                 this.name = name;
                 this.ioHandler = ioHandler;
             }
             //adding mutators:
 
-            return Weapon;
+            return WeaponW;
         })();
-        Weapon.Weapon = Weapon;        
+        Weapon.WeaponW = WeaponW;        
         Weapon.weapons = [];
         var Bazooka;
         (function (Bazooka) {
@@ -404,6 +403,7 @@ var WebSplat;
                     rocket.yvel = yvel;
                     WebSplat.addSprite(rocket);
                     this.midFire = true;
+                    this.advance();
                     return false;
                 };
                 BazookaFireIOHandler.prototype.onclick = function (ev) {
@@ -428,7 +428,8 @@ var WebSplat;
                 });
                 return BazookaFireIOHandler;
             })(WebSplat.IO.IOHandler);            
-            Weapon.weapons.push(new Weapon("Bazooka", BazookaFireIOHandler));
+            Weapon.weapons.push(new WeaponW("Bazooka", BazookaFireIOHandler));
         })(Bazooka || (Bazooka = {}));
-    })(Weapon || (Weapon = {}));
+    })(WebSplat.Weapon || (WebSplat.Weapon = {}));
+    var Weapon = WebSplat.Weapon;
 })(WebSplat || (WebSplat = {}));

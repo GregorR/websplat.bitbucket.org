@@ -286,7 +286,6 @@ var WebSplat;
                             }
                         }
                         break;
-                    case 69:
                 }
                 return false;
             };
@@ -307,6 +306,9 @@ var WebSplat;
                             WebSplat.player.xaccmax = null;
                         }
                         break;
+                    case 69:
+                        this.advance();
+                        break;
                 }
                 return false;
             };
@@ -320,9 +322,68 @@ var WebSplat;
             __extends(SelectPhaseIOHandler, _super);
             function SelectPhaseIOHandler() {
                         _super.call(this, null, null);
+                this.$$jali$$value$selector = null;
+                this.$$jali$$value$sselect = null;
             }
+            SelectPhaseIOHandler.prototype.activate = function () {
+                if(this.selector === null) {
+                    var selector = document.createElement("div");
+                    var sselect = document.createElement("select");
+                    var option = document.createElement("option");
+                    option.innerHTML = "Choose a weapon";
+                    sselect.appendChild(option);
+                    for(var w = 0; w < WebSplat.Weapon.weapons.length; w++) {
+                        var weapon = WebSplat.Weapon.weapons[w];
+                        var option = document.createElement("option");
+                        option.innerHTML = weapon.name;
+                        sselect.appendChild(option);
+                    }
+                    selector.appendChild(sselect);
+                    var hThis = this;
+                    sselect.addEventListener("change", function (ev) {
+                        var wpIdx = sselect.selectedIndex - 1;
+                        if(wpIdx < 0) {
+                            return;
+                        }
+                        hThis.next = new (WebSplat.Weapon.weapons[wpIdx].ioHandler)(hThis, Turns.theMovePhaseIOHandler);
+                        hThis.advance();
+                    });
+                    this.selector = selector;
+                    this.sselect = sselect;
+                }
+                this.sselect.selectedIndex = 0;
+                wpDisplayMessage(this.selector);
+                return true;
+            };
+            SelectPhaseIOHandler.prototype.deactivate = function () {
+                wpDisplayMessage();
+            };
+            SelectPhaseIOHandler.prototype.onkeyup = function (key) {
+                if(WebSplat.player === null) {
+                    return true;
+                }
+                switch(key) {
+                    case 81:
+                        this.regress();
+                        break;
+                    case 69:
+                        this.advance();
+                        break;
+                }
+                return false;
+            };
             //adding mutators:
 
+            Object.defineProperty(SelectPhaseIOHandler.prototype, "selector", {
+                configurable: true, enumerable: true,
+                get: function() { return this.$$jali$$value$selector; },
+                set: function(v) { this.$$jali$$value$selector = v; }
+            });
+            Object.defineProperty(SelectPhaseIOHandler.prototype, "sselect", {
+                configurable: true, enumerable: true,
+                get: function() { return this.$$jali$$value$sselect; },
+                set: function(v) { this.$$jali$$value$sselect = v; }
+            });
             return SelectPhaseIOHandler;
         })(WebSplat.IO.IOHandler);        
         Turns.theSelectPhaseIOHandler = new SelectPhaseIOHandler();
