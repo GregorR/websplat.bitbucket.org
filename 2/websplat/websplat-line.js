@@ -240,189 +240,177 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
 }
 var WebSplat;
 (function (WebSplat) {
-    (function (IO) {
-        var IOHandler = (function () {
-            function IOHandler(prev, next) {
-                this.prev = prev;
-                this.next = next;
-            }
-            IOHandler.prototype.regress = function () {
-                if(this.prev !== null) {
-                    setIOHandler(this.prev);
-                    return true;
-                }
-                return false;
-            };
-            IOHandler.prototype.advance = function () {
-                if(this.next !== null) {
-                    setIOHandler(this.next);
-                    return true;
-                }
-                return false;
-            };
-            IOHandler.prototype.activate = function () {
-                return true;
-            };
-            IOHandler.prototype.deactivate = function () {
-            };
-            IOHandler.prototype.onkeydown = function (key) {
-                return true;
-            };
-            IOHandler.prototype.onkeyup = function (key) {
-                return true;
-            };
-            IOHandler.prototype.onmousedown = function (ev) {
-                return true;
-            };
-            IOHandler.prototype.onmousemove = function (ev) {
-                return true;
-            };
-            IOHandler.prototype.onmouseup = function (ev) {
-                return true;
-            };
-            IOHandler.prototype.onclick = function (ev) {
-                return true;
-            };
-            //adding mutators:
-
-            return IOHandler;
-        })();
-        IO.IOHandler = IOHandler;        
-        var ioHandler = null;
-        function setIOHandler(to) {
-            if(ioHandler !== null) {
-                unsetIOHandler();
-            }
-            if(to !== null) {
-                ioHandler = to;
-                if(!to.activate()) {
-                    ioHandler = null;
-                }
-            }
+    var maxLineOff = 256;
+    var linePadding = 32;
+    var Line = (function () {
+        function Line() {
+            this.$$jali$$value$cLeft = 0;
+            this.$$jali$$value$cTop = 0;
+            this.$$jali$$value$cWidth = 0;
+            this.$$jali$$value$cHeight = 0;
+            this.$$jali$$value$r = 0;
+            this.$$jali$$value$g = 0;
+            this.$$jali$$value$b = 0;
+            this.$$jali$$value$t = 1;
+            this.canvas = document.createElement("canvas");
+            this.canvas.style.position = "absolute";
+            this.canvas.style.left = "0px";
+            this.canvas.style.top = "0px";
+            this.canvas.width = 0;
+            this.canvas.height = 0;
+            this.canvas.style.zIndex = "100000";
+            document.body.appendChild(this.canvas);
+            this.ctx = this.canvas.getContext("2d");
+            this.setLineStyle(255, 0, 0, 3);
         }
-        IO.setIOHandler = setIOHandler;
-        function unsetIOHandler() {
-            ioHandler.deactivate();
-            ioHandler = null;
-        }
-        IO.unsetIOHandler = unsetIOHandler;
-        var keysDown = {
+        Line.prototype.destroy = function () {
+            document.body.removeChild(this.canvas);
         };
-        function markKeyDown(key) {
-            if(keysDown[key]) {
-                return true;
-            } else {
-                keysDown[key] = true;
-                return false;
+        Line.prototype.coverRange = function (minX, minY, maxX, maxY) {
+            if(minX > maxX) {
+                this.coverRange(maxX, minY, minX, maxY);
+                return;
             }
-        }
-        function markKeyUp(key) {
-            delete keysDown[key];
-        }
-        function translateKey(key) {
-            switch(key) {
-                case 65:
-                    key = 37;
-                    break;
-                case 87:
-                    key = 38;
-                    break;
-                case 68:
-                    key = 39;
-                    break;
-                case 83:
-                    key = 40;
-                    break;
+            if(minY > maxY) {
+                this.coverRange(minX, maxY, maxX, minY);
+                return;
             }
-            return key;
-        }
-        WebSplat.addHandler("postload", function () {
-            var keydown = function (ev) {
-                if(ev.ctrlKey || ev.altKey || ev.metaKey) {
-                    return true;
+            var changed = false;
+            if(this.cLeft > minX || this.cLeft < minX - maxLineOff) {
+                changed = true;
+                this.cLeft = minX - linePadding;
+                if(this.cLeft < 0) {
+                    this.cLeft = 0;
                 }
-                var key = translateKey(ev.which);
-                if(markKeyDown(key)) {
-                    return false;
+            }
+            var cRight = this.cLeft + this.cWidth;
+            if(cRight <= maxX || cRight > maxX + maxLineOff) {
+                changed = true;
+                cRight = maxX + linePadding;
+                this.cWidth = cRight - this.cLeft;
+            }
+            if(this.cTop > minY || this.cTop < minY - maxLineOff) {
+                changed = true;
+                this.cTop = minY - linePadding;
+                if(this.cTop < 0) {
+                    this.cTop = 0;
                 }
-                if(ioHandler) {
-                    if(ioHandler.onkeydown(key)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            };
-            $(document.body).keydown(keydown);
-            $(window).keydown(keydown);
-            var keyup = function (ev) {
-                var key = translateKey(ev.which);
-                markKeyUp(key);
-                if(ioHandler) {
-                    if(ioHandler.onkeyup(key)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            };
-            $(document.body).keyup(keyup);
-            $(window).keyup(keyup);
-            $(document.body).mousedown(function (ev) {
-                if(ioHandler) {
-                    if(ioHandler.onmousedown(ev)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            });
-            $(document.body).mousemove(function (ev) {
-                if(ioHandler) {
-                    if(ioHandler.onmousemove(ev)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            });
-            $(document.body).mouseup(function (ev) {
-                if(ioHandler) {
-                    if(ioHandler.onmouseup(ev)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            });
-            $(document.body).click(function (ev) {
-                if(ioHandler) {
-                    if(ioHandler.onclick(ev)) {
-                        return true;
-                    } else {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        return false;
-                    }
-                }
-                return true;
-            });
+            }
+            var cBottom = this.cTop + this.cHeight;
+            if(cBottom <= maxY || cBottom > maxY + maxLineOff) {
+                changed = true;
+                cBottom = maxY + linePadding;
+                this.cHeight = cBottom - this.cTop;
+            }
+            if(changed) {
+                this.canvas.style.left = this.cLeft + "px";
+                this.canvas.style.top = this.cTop + "px";
+                this.canvas.width = this.cWidth;
+                this.canvas.height = this.cHeight;
+                this.assertLineStyle();
+            }
+        };
+        Line.prototype.setLineStyle = function (r, g, b, t) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.t = t;
+            this.assertLineStyle();
+        };
+        Line.prototype.assertLineStyle = function () {
+            this.ctx.strokeStyle = "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+            this.ctx.lineWidth = this.t;
+        };
+        Line.prototype.drawLine = function (fromX, fromY, toX, toY) {
+            this.coverRange(fromX, fromY, toX, toY);
+            fromX -= this.cLeft;
+            toX -= this.cLeft;
+            fromY -= this.cTop;
+            toY -= this.cTop;
+            this.ctx.clearRect(0, 0, this.cWidth, this.cHeight);
+            this.ctx.beginPath();
+            this.ctx.moveTo(fromX + 0.5, fromY + 0.5);
+            this.ctx.lineTo(toX + 0.5, toY + 0.5);
+            this.ctx.stroke();
+        };
+        Line.prototype.drawLineLen = function (fromX, fromY, toX, toY, len) {
+            var angle = Math.atan2(toX - fromX, toY - fromY);
+            toX = Math.round(fromX + Math.sin(angle) * len);
+            toY = Math.round(fromY + Math.cos(angle) * len);
+            this.drawLine(fromX, fromY, toX, toY);
+        };
+        Line.prototype.drawBar = function (fromX, fromY, toX, toY, onR, onG, onB, onT, onLen, offR, offG, offB, offT, offLen) {
+            var angle = Math.atan2(toX - fromX, toY - fromY);
+            var onToX = Math.round(fromX + Math.sin(angle) * onLen);
+            var onToY = Math.round(fromY + Math.cos(angle) * onLen);
+            var offToX = Math.round(fromX + Math.sin(angle) * offLen);
+            var offToY = Math.round(fromY + Math.cos(angle) * offLen);
+            var lowX = Math.min(fromX, onToX, offToX);
+            var highX = Math.max(fromX, onToX, offToX);
+            var lowY = Math.min(fromY, onToY, offToY);
+            var highY = Math.max(fromY, onToY, offToY);
+            this.coverRange(lowX, lowY, highX, highY);
+            fromX -= this.cLeft;
+            onToX -= this.cLeft;
+            offToX -= this.cLeft;
+            fromY -= this.cTop;
+            onToY -= this.cTop;
+            offToY -= this.cTop;
+            this.ctx.clearRect(0, 0, this.cWidth, this.cHeight);
+            this.setLineStyle(offR, offG, offB, offT);
+            this.ctx.beginPath();
+            this.ctx.moveTo(fromX + 0.5, fromY + 0.5);
+            this.ctx.lineTo(offToX + 0.5, offToY + 0.5);
+            this.ctx.stroke();
+            this.setLineStyle(onR, onG, onB, onT);
+            this.ctx.beginPath();
+            this.ctx.moveTo(fromX + 0.5, fromY + 0.5);
+            this.ctx.lineTo(onToX + 0.5, onToY + 0.5);
+            this.ctx.stroke();
+        };
+        //adding mutators:
+
+        Object.defineProperty(Line.prototype, "cLeft", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$cLeft; },
+            set: function(v) { this.$$jali$$value$cLeft = v; }
         });
-    })(WebSplat.IO || (WebSplat.IO = {}));
-    var IO = WebSplat.IO;
+        Object.defineProperty(Line.prototype, "cTop", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$cTop; },
+            set: function(v) { this.$$jali$$value$cTop = v; }
+        });
+        Object.defineProperty(Line.prototype, "cWidth", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$cWidth; },
+            set: function(v) { this.$$jali$$value$cWidth = v; }
+        });
+        Object.defineProperty(Line.prototype, "cHeight", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$cHeight; },
+            set: function(v) { this.$$jali$$value$cHeight = v; }
+        });
+        Object.defineProperty(Line.prototype, "r", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$r; },
+            set: function(v) { this.$$jali$$value$r = v; }
+        });
+        Object.defineProperty(Line.prototype, "g", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$g; },
+            set: function(v) { this.$$jali$$value$g = v; }
+        });
+        Object.defineProperty(Line.prototype, "b", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$b; },
+            set: function(v) { this.$$jali$$value$b = v; }
+        });
+        Object.defineProperty(Line.prototype, "t", {
+            configurable: true, enumerable: true,
+            get: function() { return this.$$jali$$value$t; },
+            set: function(v) { this.$$jali$$value$t = v; }
+        });
+        return Line;
+    })();
+    WebSplat.Line = Line;    
 })(WebSplat || (WebSplat = {}));

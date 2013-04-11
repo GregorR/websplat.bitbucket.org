@@ -357,16 +357,43 @@ var WebSplat;
                 __extends(BazookaFireIOHandler, _super);
                 function BazookaFireIOHandler(prev, next) {
                                 _super.call(this, prev, next);
+                    this.$$jali$$value$line = new WebSplat.Line();
                     this.$$jali$$value$mdStart = null;
+                    this.$$jali$$value$ivID = 0;
+                    this.$$jali$$value$mx = 0;
+                    this.$$jali$$value$my = 0;
                     this.$$jali$$value$firing = null;
                     this.$$jali$$value$midFire = false;
                 }
+                BazookaFireIOHandler.prototype.deactivate = function () {
+                    this.line.destroy();
+                };
                 BazookaFireIOHandler.prototype.onmousedown = function (ev) {
                     if(this.firing || this.midFire) {
                         return true;
                     }
+                    var iothis = this;
                     this.mdStart = new Date().getTime();
+                    this.mx = ev.pageX;
+                    this.my = ev.pageY;
+                    this.ivID = setInterval(function () {
+                        var bazTime = new Date().getTime() - iothis.mdStart;
+                        bazTime /= bazPowerupTime;
+                        if(bazTime > 1.0) {
+                            bazTime = 1.0;
+                        }
+                        bazTime = bazTime * 0.75 + 0.25;
+                        iothis.line.drawBar(WebSplat.player.x, WebSplat.player.y, iothis.mx, iothis.my, 255, 0, 0, 2, bazTime * 128, 0, 0, 0, 3, 128);
+                    }, 15);
                     return false;
+                };
+                BazookaFireIOHandler.prototype.onmousemove = function (ev) {
+                    if(this.mdStart === null) {
+                        return true;
+                    }
+                    this.mx = ev.pageX;
+                    this.my = ev.pageY;
+                    return true;
                 };
                 BazookaFireIOHandler.prototype.onmouseup = function (ev) {
                     if(WebSplat.player === null) {
@@ -375,6 +402,7 @@ var WebSplat;
                     if(this.mdStart === null) {
                         return true;
                     }
+                    clearInterval(this.ivID);
                     var bazTime = new Date().getTime() - this.mdStart;
                     this.mdStart = null;
                     bazTime /= bazPowerupTime;
@@ -411,10 +439,30 @@ var WebSplat;
                 };
                 //adding mutators:
 
+                Object.defineProperty(BazookaFireIOHandler.prototype, "line", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$line; },
+                    set: function(v) { this.$$jali$$value$line = v; }
+                });
                 Object.defineProperty(BazookaFireIOHandler.prototype, "mdStart", {
                     configurable: true, enumerable: true,
                     get: function() { return this.$$jali$$value$mdStart; },
                     set: function(v) { this.$$jali$$value$mdStart = v; }
+                });
+                Object.defineProperty(BazookaFireIOHandler.prototype, "ivID", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$ivID; },
+                    set: function(v) { this.$$jali$$value$ivID = v; }
+                });
+                Object.defineProperty(BazookaFireIOHandler.prototype, "mx", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$mx; },
+                    set: function(v) { this.$$jali$$value$mx = v; }
+                });
+                Object.defineProperty(BazookaFireIOHandler.prototype, "my", {
+                    configurable: true, enumerable: true,
+                    get: function() { return this.$$jali$$value$my; },
+                    set: function(v) { this.$$jali$$value$my = v; }
                 });
                 Object.defineProperty(BazookaFireIOHandler.prototype, "firing", {
                     configurable: true, enumerable: true,
