@@ -240,14 +240,6 @@ if (typeof Object.$$jali$$frontendVersion === "undefined" ||
 }
 var WebSplat;
 (function (WebSplat) {
-    WebSplat.playerIndicator = document.createElement("div");
-    WebSplat.playerIndicator.style.position = "absolute";
-    WebSplat.playerIndicator.style.zIndex = "1000000";
-    WebSplat.playerIndicator.style.background = "white";
-    WebSplat.playerIndicator.style.color = "black";
-    WebSplat.playerIndicator.style.border = "1px solid red";
-    WebSplat.playerIndicator.style.padding = "2px 2px 2px 2px";
-    WebSplat.playerIndicator.innerHTML = "Player";
     WebSplat.player = null;
     WebSplat.conf = {
         gridDensity: 6,
@@ -264,10 +256,23 @@ var WebSplat;
         hopAbove: 5,
         zapTime: 10,
         invTime: 1000,
+        zIndexes: {
+            playerIndicator: "1000000",
+            sprite: "1000100",
+            ui: "1000200"
+        },
         imageBase: "http://websplat.bitbucket.org/2/imgs/",
         maxX: 0,
         maxY: 0
     };
+    WebSplat.playerIndicator = document.createElement("div");
+    WebSplat.playerIndicator.style.position = "absolute";
+    WebSplat.playerIndicator.style.zIndex = WebSplat.conf.zIndexes.playerIndicator;
+    WebSplat.playerIndicator.style.background = "white";
+    WebSplat.playerIndicator.style.color = "black";
+    WebSplat.playerIndicator.style.border = "1px solid red";
+    WebSplat.playerIndicator.style.padding = "2px 2px 2px 2px";
+    WebSplat.playerIndicator.innerHTML = "Player";
     WebSplat.handlers = {
         "preload": [],
         "postload": [],
@@ -819,7 +824,7 @@ while(true) {
             this.draw(this.state, "r", 0);
             this.el.style.color = "black";
             this.el.style.position = "absolute";
-            this.el.style.zIndex = "1000000";
+            this.el.style.zIndex = WebSplat.conf.zIndexes.sprite;
             this.el.style.fontSize = "20px";
             document.body.appendChild(this.el);
             if(isPlatform) {

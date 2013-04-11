@@ -323,37 +323,31 @@ var WebSplat;
             function SelectPhaseIOHandler() {
                         _super.call(this, null, null);
                 this.$$jali$$value$selector = null;
-                this.$$jali$$value$sselect = null;
+                this.$$jali$$value$b0 = null;
             }
             SelectPhaseIOHandler.prototype.activate = function () {
                 if(this.selector === null) {
+                    var hThis = this;
                     var selector = document.createElement("div");
-                    var sselect = document.createElement("select");
-                    var option = document.createElement("option");
-                    option.innerHTML = "Choose a weapon";
-                    sselect.appendChild(option);
                     for(var w = 0; w < WebSplat.Weapon.weapons.length; w++) {
                         var weapon = WebSplat.Weapon.weapons[w];
-                        var option = document.createElement("option");
-                        option.innerHTML = weapon.name;
-                        sselect.appendChild(option);
-                    }
-                    selector.appendChild(sselect);
-                    var hThis = this;
-                    sselect.addEventListener("change", function (ev) {
-                        var wpIdx = sselect.selectedIndex - 1;
-                        if(wpIdx < 0) {
-                            return;
+                        var button = document.createElement("button");
+                        button.innerHTML = weapon.name;
+                        button.addEventListener("click", (function (w) {
+                            return function (ev) {
+                                hThis.next = new (WebSplat.Weapon.weapons[w].ioHandler)(hThis, Turns.theMovePhaseIOHandler);
+                                hThis.advance();
+                            };
+                        })(w));
+                        selector.appendChild(button);
+                        if(w === 0) {
+                            this.b0 = button;
                         }
-                        hThis.next = new (WebSplat.Weapon.weapons[wpIdx].ioHandler)(hThis, Turns.theMovePhaseIOHandler);
-                        hThis.advance();
-                    });
+                    }
                     this.selector = selector;
-                    this.sselect = sselect;
                 }
-                this.sselect.selectedIndex = 0;
                 wpDisplayMessage(this.selector);
-                this.sselect.focus();
+                this.b0.focus();
                 return true;
             };
             SelectPhaseIOHandler.prototype.deactivate = function () {
@@ -380,10 +374,10 @@ var WebSplat;
                 get: function() { return this.$$jali$$value$selector; },
                 set: function(v) { this.$$jali$$value$selector = v; }
             });
-            Object.defineProperty(SelectPhaseIOHandler.prototype, "sselect", {
+            Object.defineProperty(SelectPhaseIOHandler.prototype, "b0", {
                 configurable: true, enumerable: true,
-                get: function() { return this.$$jali$$value$sselect; },
-                set: function(v) { this.$$jali$$value$sselect = v; }
+                get: function() { return this.$$jali$$value$b0; },
+                set: function(v) { this.$$jali$$value$b0 = v; }
             });
             return SelectPhaseIOHandler;
         })(WebSplat.IO.IOHandler);        
