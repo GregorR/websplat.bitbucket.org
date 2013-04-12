@@ -383,7 +383,7 @@ var WebSplat;
                             bazTime = 1.0;
                         }
                         bazTime = bazTime * 0.75 + 0.25;
-                        iothis.line.drawBar(WebSplat.player.x, WebSplat.player.y, iothis.mx, iothis.my, 255, 0, 0, 2, bazTime * 128, 0, 0, 0, 3, 128);
+                        iothis.line.drawBar(Math.round(WebSplat.player.x + WebSplat.player.w / 2), Math.round(WebSplat.player.y), iothis.mx, iothis.my, 255, 0, 0, 2, bazTime * 128, 0, 0, 0, 3, 128);
                     }, 15);
                     return false;
                 };
