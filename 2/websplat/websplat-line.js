@@ -321,6 +321,24 @@ var WebSplat;
             this.ctx.strokeStyle = "rgb(" + this.r + "," + this.g + "," + this.b + ")";
             this.ctx.lineWidth = this.t;
         };
+        Line.prototype.rkify = function () {
+            var id = this.ctx.getImageData(0, 0, this.cWidth, this.cHeight);
+            var dlen = id.data.length;
+            for(var i = 0; i < dlen; i += 4) {
+                if(id.data[i + 3] < 8) {
+                    id.data[i + 3] = 0;
+                } else {
+                    id.data[i + 3] = 255;
+                    if(id.data[i] < 128) {
+                        id.data[i] = id.data[i + 1] = id.data[i + 2] = 0;
+                    } else {
+                        id.data[i] = 255;
+                        id.data[i + 1] = id.data[i + 2] = 0;
+                    }
+                }
+            }
+            this.ctx.putImageData(id, 0, 0);
+        };
         Line.prototype.drawLine = function (fromX, fromY, toX, toY) {
             this.coverRange(fromX, fromY, toX, toY);
             fromX -= this.cLeft;
@@ -367,6 +385,7 @@ var WebSplat;
             this.ctx.moveTo(fromX + 0.5, fromY + 0.5);
             this.ctx.lineTo(onToX + 0.5, onToY + 0.5);
             this.ctx.stroke();
+            this.rkify();
         };
         //adding mutators:
 
